@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Rose Day ❤️</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
+body{
+  height:100vh;
+  background:#ffe6ef;
+  overflow:hidden;
+}
+
+#scene{
+  width:100%;
+  height:100%;
+  position:relative;
+  text-align:center;
+}
+
+#startBtn{
+  position:absolute;
+  inset:0;
+  background:#ffe6ef;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:2rem;
+  cursor:pointer;
+  z-index:10;
+}
+
+#rose{
+  position:absolute;
+  font-size:3.5rem;
+  display:none;
+  cursor:pointer;
+  transition:transform .4s ease;
+}
+
+#counter{
+  margin-top:40px;
+  font-size:1.3rem;
+}
+
+#wish{
+  display:none;
+  margin-top:25px;
+  font-size:2rem;
+}
+
+.name{
+  color:#ff4d6d;
+  text-shadow:0 0 12px rgba(255,77,109,.6);
+}
+
+#romanticMsg{
+  display:none;
+  margin-top:12px;
+  font-size:1.1rem;
+  color:#d6336c;
+  line-height:1.6;
+}
+
+#proposal{
+  display:none;
+  margin-top:20px;
+}
+
+button{
+  padding:12px 22px;
+  font-size:1.1rem;
+  border:none;
+  border-radius:30px;
+  margin:10px;
+  cursor:pointer;
+}
+
+#yesBtn{
+  background:#ff4d6d;
+  color:#fff;
+}
+
+#noBtn{
+  background:#ddd;
+  position:absolute;
+}
+
+/* Animations */
+
+@keyframes heartbeat{
+  0%{transform:scale(1)}
+  20%{transform:scale(1.04)}
+  40%{transform:scale(1)}
+  60%{transform:scale(1.06)}
+  80%{transform:scale(1)}
+}
+
+.heartbeat{
+  animation:heartbeat 1.6s ease-in-out infinite;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(15px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.fadeIn{
+  animation:fadeIn 1.2s ease forwards;
+}
+
+.heart{
+  position:absolute;
+  animation:fall 6s linear infinite;
+}
+
+@keyframes fall{
+  0%{transform:translateY(-10%);opacity:1}
+  100%{transform:translateY(110%);opacity:0}
+}
+</style>
+</head>
+
+<body>
+
+<div id="scene">
+
+  <div id="startBtn">Tap to Start ❤️</div>
+
+  <div id="counter">Roses: 0/5 ❤️❤️❤️❤️❤️</div>
+  <div id="rose">🌹</div>
+
+  <h1 id="wish">
+    Happy Rose Day <span class="name">Rakshita</span> 🌹
+  </h1>
+
+  <p id="romanticMsg">
+    Every rose reminds me of you, bubu 🌹<br>
+    Thank you for filling my life with love and smiles ❤️
+  </p>
+
+  <div id="proposal">
+    <p style="font-size:1.4rem;">
+      Bubu, will you always be mine? 💍
+    </p>
+    <button id="yesBtn">Yes / Always 💖</button>
+    <button id="noBtn">No 🙃</button>
+  </div>
+
+</div>
+
+<audio id="bgMusic" loop>
+  <source src="https://cdn.pixabay.com/audio/2023/02/28/audio_7c9f7efc3a.mp3">
+</audio>
+
+<script>
+const startBtn=document.getElementById("startBtn");
+const rose=document.getElementById("rose");
+const counter=document.getElementById("counter");
+const scene=document.getElementById("scene");
+const wish=document.getElementById("wish");
+const romanticMsg=document.getElementById("romanticMsg");
+const proposal=document.getElementById("proposal");
+const yesBtn=document.getElementById("yesBtn");
+const noBtn=document.getElementById("noBtn");
+const music=document.getElementById("bgMusic");
+
+let count=0;
+const roses=["🌹","🌸","🌺","🌷","🥀"];
+
+startBtn.onclick=()=>{
+  startBtn.style.display="none";
+  rose.style.display="block";
+  moveRose();
+  music.volume=0;
+  music.play();
+  fadeMusic();
+};
+
+function fadeMusic(){
+  let v=0;
+  const i=setInterval(()=>{
+    if(v>=0.6)clearInterval(i);
+    v+=0.02;
+    music.volume=v;
+  },200);
+}
+
+function moveRose(){
+  rose.style.left=Math.random()*80+10+"%";
+  rose.style.top=Math.random()*70+10+"%";
+  rose.textContent=roses[Math.floor(Math.random()*roses.length)];
+}
+
+rose.onclick=()=>{
+  if(count>=5)return;
+  count++;
+  navigator.vibrate?.(50);
+  counter.textContent=`Roses: ${count}/5 ❤️❤️❤️❤️❤️`;
+  moveRose();
+
+  if(count===5){
+    rose.style.display="none";
+    scene.classList.add("heartbeat");
+
+    setTimeout(()=>{
+      scene.classList.remove("heartbeat");
+      wish.style.display="block";
+      wish.classList.add("fadeIn");
+
+      setTimeout(()=>{
+        romanticMsg.style.display="block";
+        romanticMsg.classList.add("fadeIn");
+      },800);
+
+      setTimeout(()=>{
+        proposal.style.display="block";
+        proposal.classList.add("fadeIn");
+      },1600);
+    },3500);
+  }
+};
+
+noBtn.onmouseover=()=>{
+  noBtn.style.left=Math.random()*80+"%";
+  noBtn.style.top=Math.random()*80+"%";
+};
+
+yesBtn.onclick=()=>{
+  proposal.innerHTML="<h2>She said YES 💖</h2>";
+  confetti();
+  heartsFall();
+};
+
+function confetti(){
+  for(let i=0;i<30;i++){
+    const c=document.createElement("div");
+    c.textContent="🎉";
+    c.style.position="absolute";
+    c.style.left=Math.random()*100+"%";
+    c.style.top="-10%";
+    c.style.fontSize="1.5rem";
+    c.style.animation="fall 4s linear";
+    scene.appendChild(c);
+    setTimeout(()=>c.remove(),4000);
+  }
+}
+
+function heartsFall(){
+  setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="heart";
+    h.textContent="❤️";
+    h.style.left=Math.random()*100+"%";
+    h.style.fontSize=Math.random()*20+10+"px";
+    scene.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+  },400);
+}
+</script>
+
+</body>
+</html>
